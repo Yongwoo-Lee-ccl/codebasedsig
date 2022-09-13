@@ -9,7 +9,7 @@
         {0,0,0,0,0,32,63,120,219,382,638,1024}};
 
 // Generate the RM generator matrix
-    void rm_gen(int rm_r, int rm_m, uint16_t row_first, uint16_t row_last, uint16_t col_first, uint16_t col_last, matrix* gen)
+    void rmGen(int rm_r, int rm_m, uint16_t row_first, uint16_t row_last, uint16_t col_first, uint16_t col_last, matrix* gen)
     {
         if (rm_r == 0)
             for (int i = 0; i < (1 << rm_m); ++i)
@@ -23,23 +23,23 @@
         {
             uint16_t col_medium = (col_first + col_last) / 2;
             
-            rm_gen(rm_r,        rm_m - 1, row_first,                            row_first + rm_dim[rm_r][rm_m - 1], col_first,  col_medium, gen);
-            rm_gen(rm_r,        rm_m - 1, row_first,                            row_first + rm_dim[rm_r][rm_m - 1], col_medium, col_last,   gen);
-            rm_gen(rm_r - 1,    rm_m - 1, row_first + rm_dim[rm_r][rm_m - 1],   row_last ,                          col_medium, col_last,   gen);
+            rmGen(rm_r,        rm_m - 1, row_first,                            row_first + rm_dim[rm_r][rm_m - 1], col_first,  col_medium, gen);
+            rmGen(rm_r,        rm_m - 1, row_first,                            row_first + rm_dim[rm_r][rm_m - 1], col_medium, col_last,   gen);
+            rmGen(rm_r - 1,    rm_m - 1, row_first + rm_dim[rm_r][rm_m - 1],   row_last ,                          col_medium, col_last,   gen);
         }
     }
 
 // Generate the RM generator matrix applying permutation
-    void rm_gen_mod(matrix* gen, uint16_t* part_perm1, uint16_t* part_perm2)
+    void rmGenMod(matrix* gen, uint16_t* part_perm1, uint16_t* part_perm2)
     {
-        rm_gen(RM_R, RM_M, 0, CODE_K, 0, CODE_N, gen);
+        rmGen(RM_R, RM_M, 0, CODE_K, 0, CODE_N, gen);
 
         for (int i = 0; i < 4; ++i)
         {
-            col_permute(gen, 0, rm_dim[RM_R][RM_M - 2], i * (CODE_N / 4), (i + 1) * (CODE_N / 4), part_perm1);
+            colPermute(gen, 0, rm_dim[RM_R][RM_M - 2], i * (CODE_N / 4), (i + 1) * (CODE_N / 4), part_perm1);
         }
 
-        col_permute(gen, CODE_K - rm_dim[RM_R - 2][RM_M - 2], CODE_K, 3 * CODE_N / 4, CODE_N, part_perm2);
+        colPermute(gen, CODE_K - rm_dim[RM_R - 2][RM_M - 2], CODE_K, 3 * CODE_N / 4, CODE_N, part_perm2);
     }
 
 // Calculate the hamming weight for each row of matrix 
@@ -81,7 +81,7 @@
     }
 
 // Generate the random matrix -> To fix
-    void random_matrix_gen()
+    void randomMtxGen()
     {
         int pow2R = pow(2, RM_R);
         random_matrix = newMatrix(2, pow2R);
@@ -101,7 +101,7 @@
     }
 
 // Generate decoding information for random matrix.
-    void decoding_info_gen()
+    void decodingInfoGen()
     {
         int pow2R = pow(2, RM_R);
         decoding_info = (int**)malloc(sizeof(int) * 3);
@@ -190,7 +190,7 @@
     }
 
 // Replace 3 ~ 2^{r} (repetition) for dual of random matrix
-    void repalce_H_dual(matrix* mtx)
+    void repalceHDual(matrix* mtx)
     {
         int pow2R = pow(2, RM_R);
 
@@ -247,22 +247,22 @@
 // Generated modified rm generator matrix
     void modified_rm_gen(matrix* gen, matrix* start, uint16_t* part_perm1, uint16_t* part_perm2)
     {
-        rm_gen_mod(start, part_perm1, part_perm2);
+        rmGenMod(start, part_perm1, part_perm2);
 
-        // rm_gen(RM_R, RM_M, 0, CODE_K, 0, CODE_N, start);
+        // rmGen(RM_R, RM_M, 0, CODE_K, 0, CODE_N, start);
 
-        random_matrix_gen();
-        decoding_info_gen();
+        randomMtxGen();
+        decodingInfoGen();
 
         // deleteRow(start);
-        repalce_H_dual(start);
+        repalceHDual(start);
 
         // for (int i = 0; i < 4; ++i)
         // {
-        //     col_permute(start, 0, rm_dim[RM_R][RM_M - 2], i * (CODE_N / 4), (i + 1) * (CODE_N / 4), part_perm1);
+        //     colPermute(start, 0, rm_dim[RM_R][RM_M - 2], i * (CODE_N / 4), (i + 1) * (CODE_N / 4), part_perm1);
         // }
 
-        // col_permute(start, CODE_K - rm_dim[RM_R - 2][RM_M - 2], CODE_K, 3 * CODE_N / 4, CODE_N, part_perm2);
+        // colPermute(start, CODE_K - rm_dim[RM_R - 2][RM_M - 2], CODE_K, 3 * CODE_N / 4, CODE_N, part_perm2);
 
         // replaceRow(start);
 

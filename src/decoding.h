@@ -8,16 +8,16 @@
 #include "rm.h"
 
 // Allocate the decoding array
-    void init_decoding(int n);
+    void initDecoding(int n);
 
 // Modified Minimum distance decoding And Binary to Real number
     void md_replace_binToReal(float* y, const int first, const int last);
 
 // Recursive decoding
-    void prev_recursive_decoding_mod(float* y, const  int r1, const int m1, const int f, const int l, uint16_t *perm1, uint16_t *perm2);
+    void prevRecursiveDecodingMod(float* y, const  int r1, const int m1, const int f, const int l, uint16_t *perm1, uint16_t *perm2);
 
 // Modified recursive decoding
-    void recursive_decoding_mod(float* y, const int rm_r, const int rm_m, const int first, const int last, uint16_t* perm1, uint16_t* perm2);
+    void recursiveDecodingMod(float* y, const int rm_r, const int rm_m, const int first, const int last, uint16_t* perm1, uint16_t* perm2);
 
 // Random Choice
     void randChoice(const int* s, const int k, int* result);

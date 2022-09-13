@@ -18,12 +18,12 @@ int main()
       uint16_t* part_perm1          = (uint16_t*)malloc(sizeof(uint16_t) * CODE_N / 4);
       uint16_t* part_perm2          = (uint16_t*)malloc(sizeof(uint16_t) * CODE_N / 4);
 
-      init_decoding(CODE_N);
+      initDecoding(CODE_N);
 
-      partial_permutation_gen(part_perm1);
-      partial_permutation_gen(part_perm2);
+      partialPermutationGen(part_perm1);
+      partialPermutationGen(part_perm2);
 
-      rm_gen_mod(Start_Matrix, part_perm1, part_perm2);
+      rmGenMod(Start_Matrix, part_perm1, part_perm2);
 
       dual(Start_Matrix, Dual_matrix);
 
@@ -35,7 +35,7 @@ int main()
          received[i] = pow(-1, power);
       }
 
-      prev_recursive_decoding_mod(received, RM_R, RM_M, 0, CODE_N, part_perm1, part_perm2);
+      prevRecursiveDecodingMod(received, RM_R, RM_M, 0, CODE_N, part_perm1, part_perm2);
 
       matrix* c = newMatrix(1, CODE_N);
 
@@ -47,7 +47,7 @@ int main()
 
       matrix* result = newMatrix(1, CODE_N - CODE_K);
 
-      mtx_vector_product(Dual_matrix, c, result);
+      mtxVecProd(Dual_matrix, c, result);
 
       for (int i = 0; i < result->cols; ++i)
       {
@@ -73,24 +73,24 @@ int main()
       uint16_t* part_perm1          = (uint16_t*)malloc(sizeof(uint16_t) * CODE_N / 4);
       uint16_t* part_perm2          = (uint16_t*)malloc(sizeof(uint16_t) * CODE_N / 4);
 
-      init_decoding(CODE_N);
+      initDecoding(CODE_N);
 
-      partial_permutation_gen(part_perm1);
-      partial_permutation_gen(part_perm2);
+      partialPermutationGen(part_perm1);
+      partialPermutationGen(part_perm2);
 
-      rm_gen(RM_R, RM_M, 0, CODE_K, 0, CODE_N, Start_Matrix);
+      rmGen(RM_R, RM_M, 0, CODE_K, 0, CODE_N, Start_Matrix);
 
-      random_matrix_gen();
-      decoding_info_gen();
+      randomMtxGen();
+      decodingInfoGen();
 
-      repalce_H_dual(Start_Matrix);
+      repalceHDual(Start_Matrix);
 
       for (int i = 0; i < 4; ++i)
       {
-         col_permute(Start_Matrix, 0, rm_dim[RM_R][RM_M - 2], i * (CODE_N / 4), (i + 1) * (CODE_N / 4), part_perm1);
+         colPermute(Start_Matrix, 0, rm_dim[RM_R][RM_M - 2], i * (CODE_N / 4), (i + 1) * (CODE_N / 4), part_perm1);
       }
 
-      col_permute(Start_Matrix, CODE_K - rm_dim[RM_R - 2][RM_M - 2], CODE_K, 3 * CODE_N / 4, CODE_N, part_perm2);
+      colPermute(Start_Matrix, CODE_K - rm_dim[RM_R - 2][RM_M - 2], CODE_K, 3 * CODE_N / 4, CODE_N, part_perm2);
 
 
 
@@ -104,7 +104,7 @@ int main()
          received[i] = pow(-1, power);
       }
 
-      recursive_decoding_mod(received, RM_R, RM_M, 0, CODE_N, part_perm1, part_perm2);
+      recursiveDecodingMod(received, RM_R, RM_M, 0, CODE_N, part_perm1, part_perm2);
 
       matrix* c = newMatrix(1, CODE_N);
 
@@ -116,7 +116,7 @@ int main()
 
       matrix* result = newMatrix(1, CODE_N - CODE_K);
  
-      mtx_vector_product(Dual_matrix, c, result);
+      mtxVecProd(Dual_matrix, c, result);
 
       for (int i = 0; i < result->cols; ++i)
       {

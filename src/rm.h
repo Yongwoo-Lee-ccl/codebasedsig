@@ -16,10 +16,10 @@
     matrix* random_matrix;
 
 // Generate the RM generator matrix
-    void rm_gen(int rm_r, int rm_m, uint16_t row_first, uint16_t row_last, uint16_t col_first, uint16_t col_last, matrix* gen);
+    void rmGen(int rm_r, int rm_m, uint16_t row_first, uint16_t row_last, uint16_t col_first, uint16_t col_last, matrix* gen);
 
 // Generate the RM generator matrix applying permutation
-    void rm_gen_mod(matrix* gen, uint16_t* part_perm1, uint16_t* part_perm2);
+    void rmGenMod(matrix* gen, uint16_t* part_perm1, uint16_t* part_perm2);
 
 //----------------------------------Modified pqsigRM-------------------------------------//
 
@@ -30,16 +30,16 @@
     int find_rank(matrix* mtx);
 
 // Generate the random matrix -> To fix
-    void random_matrix_gen();
+    void randomMtxGen();
 
 // Generate the random matrix with information
-    void decoding_info_gen();
+    void decodingInfoGen();
 
 // Replace 1~2 row of matrix
     void replaceRow(matrix* src);
 
 // Replate 3 ~ 2^{r} (repetition)
-    void repalce_H_dual(matrix* mtx);
+    void repalceHDual(matrix* mtx);
 
 // Find random vector for dual matrix
     void find_random_vec(matrix* src, matrix* vec);

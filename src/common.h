@@ -25,10 +25,10 @@
     void permutation_gen(uint16_t* Q, int len);
 
 // Generate the partial permutation Q
-    void partial_permutation_gen(uint16_t* Q);
+    void partialPermutationGen(uint16_t* Q);
 
 // Generate the matrix applying the partial permutation
-    void col_permute(matrix* mtx, const int row_first, const int row_last, const int col_first, const int col_last, uint16_t* Q);
+    void colPermute(matrix* mtx, const int row_first, const int row_last, const int col_first, const int col_last, uint16_t* Q);
 
 
 

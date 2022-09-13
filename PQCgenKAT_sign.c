@@ -22,7 +22,7 @@ You are solely responsible for determining the appropriateness of using and dist
 
 int		FindMarker(FILE *infile, const char *marker);
 int		ReadHex(FILE *infile, unsigned char *A, int Length, char *str);
-void	fprintBstr(FILE *fp, char *S, unsigned char *A, unsigned long long L);
+void	fprintBstr(FILE *fp, char *S, unsigned char *A, uint64_t L);
 
 char    AlgName[] = "My Alg Name";
 
@@ -35,7 +35,7 @@ main()
     unsigned char       msg[3300];
     unsigned char       entropy_input[48];
     unsigned char       *m, *sm, *m1;
-    unsigned long long  mlen, smlen, mlen1;
+    uint64_t  mlen, smlen, mlen1;
     int                 count;
     int                 done;
     unsigned char       pk[CRYPTO_PUBLICKEYBYTES], sk[CRYPTO_SECRETKEYBYTES];
@@ -246,9 +246,9 @@ ReadHex(FILE *infile, unsigned char *A, int Length, char *str)
 }
 
 void
-fprintBstr(FILE *fp, char *S, unsigned char *A, unsigned long long L)
+fprintBstr(FILE *fp, char *S, unsigned char *A, uint64_t L)
 {
-	unsigned long long  i;
+	uint64_t  i;
 
 	fprintf(fp, "%s", S);
 

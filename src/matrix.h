@@ -47,7 +47,7 @@ typedef struct
     void product(matrix* mtx1, matrix* mtx2, matrix* result);
 
 // Product between matrix and vector. Vector is row vector and the result is also row vector
-    void mtx_vector_product(matrix* mtx, matrix* vec, matrix* result);
+    void mtxVecProd(matrix* mtx, matrix* vec, matrix* result);
 
 // Interchanging row_idx1 and row_idx2 in matrix
     void rowInterchanging(matrix* mtx, int row_idx1, int row_idx2);

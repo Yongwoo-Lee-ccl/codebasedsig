@@ -2,7 +2,7 @@
 
 float* temp;
 // Allocate the decoding array
-    void init_decoding(int n)
+    void initDecoding(int n)
     {
         if (temp == 0)
         {
@@ -66,7 +66,7 @@ float* temp;
 
         matrix* s = newMatrix(cwd->rows, random_matrix->rows);
 
-        mtx_vector_product(random_matrix, cwd, s);
+        mtxVecProd(random_matrix, cwd, s);
 
         if ((getElement(s, 0, 0) == 0) && (getElement(s, 0, 1) == 0))
         {
@@ -119,7 +119,7 @@ float* temp;
 
     }
 // --------------------------------------------------------------------------------------//
-void prev_recursive_decoding_mod(float* y, const  int r1, const int m1, 
+void prevRecursiveDecodingMod(float* y, const  int r1, const int m1, 
 	const int f, const int l, uint16_t *perm1, uint16_t *perm2) {
 	int i;
 	if (r1 == 0) {
@@ -159,13 +159,13 @@ void prev_recursive_decoding_mod(float* y, const  int r1, const int m1,
 		y[i + (l + f) / 2] = y[i + (l + f) / 2] * y[i + f];
 	}
 
-	prev_recursive_decoding_mod(y, r1 - 1, m1 - 1, (l + f) / 2, l, perm1, perm2);
+	prevRecursiveDecodingMod(y, r1 - 1, m1 - 1, (l + f) / 2, l, perm1, perm2);
 
 	for ( i = 0; i < (l - f) / 2; i++) {
 		y[f + i] = (y[f + i] + y[i + (l + f) / 2] * temp[f + i]) / 2;
 	}
 
-	prev_recursive_decoding_mod(y, r1, m1 - 1, f, (l + f) / 2, perm1, perm2);
+	prevRecursiveDecodingMod(y, r1, m1 - 1, f, (l + f) / 2, perm1, perm2);
 
 	for ( i = 0; i < (l - f) / 2; i++) {
 		y[i + (l + f) / 2] = y[i + (l + f) / 2] * y[i + f];
@@ -182,7 +182,7 @@ void prev_recursive_decoding_mod(float* y, const  int r1, const int m1,
 // --------------------------------------------------------------------------------------//
 
 // Modified recursive decoding
-    void recursive_decoding_mod(float* y, const int rm_r, const int rm_m, const int first, const int last, uint16_t* perm1, uint16_t* perm2)
+    void recursiveDecodingMod(float* y, const int rm_r, const int rm_m, const int first, const int last, uint16_t* perm1, uint16_t* perm2)
     {
         if ((rm_m == RM_M - 2) && (rm_r == RM_R))
             y_depermute(y, first, last, perm1);
@@ -245,12 +245,12 @@ void prev_recursive_decoding_mod(float* y, const  int r1, const int m1,
             for (int i = 0; i < (last - first) / 2; ++i)
                 y[i + (last + first) / 2] = y[i + (last + first) / 2] * y[i + first];
 
-            recursive_decoding_mod(y, rm_r - 1, rm_m - 1, (last + first) / 2, last, perm1, perm2);
+            recursiveDecodingMod(y, rm_r - 1, rm_m - 1, (last + first) / 2, last, perm1, perm2);
 
             for (int i = 0; i < (last - first) / 2; ++i)
                 y[first + i] = (y[first + i] + y[i + (last + first) / 2] * temp[first + i]) / 2;
 
-            recursive_decoding_mod(y, rm_r, rm_m - 1, first, (last + first) / 2, perm1, perm2);
+            recursiveDecodingMod(y, rm_r, rm_m - 1, first, (last + first) / 2, perm1, perm2);
 
             for (int i = 0; i < (last - first) / 2; ++i)
                 y[i + (last + first) / 2] = y[i + (last + first) / 2] * y[i + first];

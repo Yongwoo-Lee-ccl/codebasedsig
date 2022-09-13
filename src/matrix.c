@@ -68,7 +68,7 @@
 
 // Product between matrix and vector
 // Vector is row vector and the result is also row vector
-    void mtx_vector_product(matrix* mtx, matrix* vec, matrix* result)
+    void mtxVecProd(matrix* mtx, matrix* vec, matrix* result)
     {
         assert(mtx->cols == vec->cols);
         assert(mtx->rows == result->cols);
