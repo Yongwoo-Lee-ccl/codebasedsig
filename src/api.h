@@ -4,6 +4,8 @@
 #ifndef api_h
 #define api_h
 
+#include <stdint.h>
+
 #define CRYPTO_PUBLICKEYBYTES (1024*2048)/8
 #define CRYPTO_SECRETKEYBYTES (1024*1024+2048*16+512*16+512*16+1024*16)/8 
 

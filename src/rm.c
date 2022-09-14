@@ -46,7 +46,7 @@
     int hamming_row(matrix* mtx, int row)
     {
         int wgt = 0;
-        for (int i = 0; i < mtx->cols; ++i)
+        for (int i = 0; i < mtx->ncols; ++i)
             wgt += getElement(mtx, row, i);
         return wgt;
     }
@@ -54,7 +54,7 @@
 // Find the rank of matrix
     int find_rank(matrix* mtx)
     {
-        matrix* mcpy = newMatrix(mtx->rows, mtx->cols);
+        matrix* mcpy = newMatrix(mtx->nrows, mtx->ncols);
         matrixcpy(mtx, mcpy);
 
         rref(mcpy);
@@ -63,7 +63,7 @@
         int row = 0;
         int col = 0;
 
-        while(row < mcpy->rows && col < mcpy->cols)
+        while(row < mcpy->nrows && col < mcpy->ncols)
         {
             if (getElement(mcpy, row, col) == 1)
             {
@@ -93,7 +93,7 @@
             for (int i = 0; i < random_matrix->alloc_size; ++i)
                 random_matrix->elem[i] = rand() % 256;
 
-            for (int i = 0; i < random_matrix->rows; ++i)
+            for (int i = 0; i < random_matrix->nrows; ++i)
                 if (hamming_row(random_matrix, i) % 2 == 1) break;            
 
             if (find_rank(random_matrix) == 2) break;
@@ -118,7 +118,7 @@
         int loc1 = 0;
         int loc2 = 0;
 
-        for (int i = 0; i < random_matrix->cols; ++i)
+        for (int i = 0; i < random_matrix->ncols; ++i)
         {
             if ((getElement(random_matrix, 0, i) == 1) && (getElement(random_matrix, 1, i) == 0))
             {
@@ -144,13 +144,13 @@
     void deleteRow(matrix* mtx)
     {
         int pow2R = pow(2, RM_R);
-        matrix* mcpy = newMatrix(mtx->rows, mtx->cols);
+        matrix* mcpy = newMatrix(mtx->nrows, mtx->ncols);
         matrixcpy(mtx, mcpy);
 
         memset(mtx->elem, 0, mtx->alloc_size);
 
 
-        for (int i = pow2R; i < mtx->rows; ++i)
+        for (int i = pow2R; i < mtx->nrows; ++i)
         {
             for (int j = 0; j < mtx->rwdcnt; ++j)
             {
@@ -172,17 +172,17 @@
             for (int i = 0; i < r_app->alloc_size; ++i)
                 r_app->elem[i] = rand() % 256;
 
-            for (int i = 0; i < r_app->rows; ++i)
+            for (int i = 0; i < r_app->nrows; ++i)
                 if (hamming_row(r_app, i) % 2 == 1) break;            
 
             if (find_rank(r_app) == 2) break;
         }
 
-        for (int i = 0; i < r_app->rows; ++i)
+        for (int i = 0; i < r_app->nrows; ++i)
         {
             for (int j = 0; j < mtx->rwdcnt; ++j)
             {
-                mtx->elem[(i + mtx->rows - 2) * mtx->rwdcnt + j] = r_app->elem[i * mtx->rwdcnt + j];
+                mtx->elem[(i + mtx->nrows - 2) * mtx->rwdcnt + j] = r_app->elem[i * mtx->rwdcnt + j];
             }
         }
 
@@ -195,19 +195,19 @@
         int pow2R = pow(2, RM_R);
 
         matrix* dual_matrix = newMatrix(pow2R - 2, pow2R);
-        matrix* tmp_matrix = newMatrix(random_matrix->rows, random_matrix->cols);
+        matrix* tmp_matrix = newMatrix(random_matrix->nrows, random_matrix->ncols);
 
         matrixcpy(random_matrix, tmp_matrix);
         
         dual(tmp_matrix, dual_matrix);
 
-        for (int i = 0; i < dual_matrix->rows; ++i)
+        for (int i = 0; i < dual_matrix->nrows; ++i)
             for (int j = 0; j < mtx->rwdcnt; ++j)
                 mtx->elem[i * mtx->rwdcnt + j] = dual_matrix->elem[i * dual_matrix->rwdcnt + (j % dual_matrix->rwdcnt)];
 
-        // for (int i = 0; i < dual_matrix->rows; ++i)
-        //     for (int j = 0; j < mtx->cols; ++j)
-        //         setElement(mtx, i, j, getElement(dual_matrix, i, (j % dual_matrix->cols)));
+        // for (int i = 0; i < dual_matrix->nrows; ++i)
+        //     for (int j = 0; j < mtx->ncols; ++j)
+        //         setElement(mtx, i, j, getElement(dual_matrix, i, (j % dual_matrix->ncols)));
 
         deleteMatrix(dual_matrix);
         deleteMatrix(tmp_matrix);
@@ -217,17 +217,17 @@
     void paddingRow(matrix* src, matrix* result)
     {
         // Find random vector for dual matrix
-        matrix* vec = newMatrix(1, src->cols);
+        matrix* vec = newMatrix(1, src->ncols);
 
-        matrix* src_cpy = newMatrix(src->rows, src->cols);
+        matrix* src_cpy = newMatrix(src->nrows, src->ncols);
         matrixcpy(src, src_cpy);
 
-        matrix* src_dual = newMatrix((src->cols - src->rows), src->cols);
+        matrix* src_dual = newMatrix((src->ncols - src->nrows), src->ncols);
         dual(src_cpy, src_dual);
 
         srand(time(NULL));
 
-        int loc = rand() % (src_dual->rows);
+        int loc = rand() % (src_dual->nrows);
         for (int i = 0; i < src_dual->rwdcnt; ++i)
             vec->elem[i] = src_dual->elem[loc * src_dual->rwdcnt + i];
 
@@ -235,7 +235,7 @@
         memcpy(result->elem, src->elem, src->alloc_size);
 
         for (int i = 0; i < vec->rwdcnt; ++i)
-            result->elem[src->rows * src->rwdcnt + i] = vec->elem[i];
+            result->elem[src->nrows * src->rwdcnt + i] = vec->elem[i];
 
 
 

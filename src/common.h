@@ -1,16 +1,17 @@
 #ifndef __COMMON_H
 #define __COMMON_H
 
-#include <openssl/sha.h>
 #include <string.h>
 #include <stdlib.h>
+
+#include <openssl/evp.h>
 
 #include "matrix.h"
 #include "rng.h"
 #include "parm.h"
 
 // Hash for the message
-    unsigned char* hashMsg(unsigned char* s, const unsigned char* m, unsigned long long mlen, unsigned long long sign_i);
+    unsigned char* hashMsg(unsigned char* s, const unsigned char* m, uint64_t mlen, uint64_t sign_i);
 
 // Find the hamming weight for error matrix (error vector)
     int hammingWgt(matrix* error);

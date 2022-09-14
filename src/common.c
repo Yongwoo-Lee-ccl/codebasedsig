@@ -1,5 +1,4 @@
 #include "common.h"
-#include <openssl/evp.h>
 // Hash for the message
 
 void SHAKE128(unsigned char *digest, const unsigned char *message, size_t message_len, size_t hashlen)
@@ -12,23 +11,24 @@ void SHAKE128(unsigned char *digest, const unsigned char *message, size_t messag
     EVP_MD_CTX_destroy(mdctx);
 }
 
-unsigned char* hashMsg(unsigned char* s, const unsigned char* m, unsigned long long mlen, unsigned long long sign_i)
+unsigned char* hashMsg(unsigned char* s, const unsigned char* m, uint64_t mlen, uint64_t sign_i)
 {
     // Hash the given message, syndrome s = h(M|i)
     // It uses SHAKE128 inside
 
-    *(unsigned long long*)(m + mlen) = sign_i; //concatenate i: h(M | i )
-    SHAKE128(s, m, mlen+sizeof(unsigned long long), CODE_N - CODE_K);
+    *(uint64_t*)(m + mlen) = sign_i; //concatenate i: h(M | i )
+    SHAKE128(s, m, mlen+sizeof(uint64_t), (CODE_N - CODE_K)/ELEMBLOCKSIZE);
 
     return s;
 }
 
 // Find the hamming weight for error matrix (error vector)
+// TODO: improve, maybe slow
 int hammingWgt(matrix* error)
 {
     int wgt = 0;
 
-    for (int i = 0; i < error->cols; ++i)
+    for (int i = 0; i < error->ncols; ++i)
         wgt += getElement(error, 0, i);
 
     return wgt;
@@ -94,7 +94,7 @@ void partialPermutationGen(uint16_t* Q)
 // Generate the matrix applying the partial permutation
 void colPermute(matrix* mtx, const int row_first, const int row_last, const int col_first, const int col_last, uint16_t* Q)
 {
-    matrix* mcpy = newMatrix(mtx->rows, mtx->cols);
+    matrix* mcpy = newMatrix(mtx->nrows, mtx->ncols);
 
     matrixcpy(mtx, mcpy);
 
