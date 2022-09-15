@@ -90,7 +90,7 @@
         {
             srand(time(NULL));
 
-            for (int i = 0; i < random_matrix->alloc_size; ++i)
+            for (int i = 0; i < random_matrix->allocSize; ++i)
                 random_matrix->elem[i] = rand() % 256;
 
             for (int i = 0; i < random_matrix->nrows; ++i)
@@ -147,7 +147,7 @@
         matrix* mcpy = newMatrix(mtx->nrows, mtx->ncols);
         matrixcpy(mtx, mcpy);
 
-        memset(mtx->elem, 0, mtx->alloc_size);
+        memset(mtx->elem, 0, mtx->allocSize);
 
 
         for (int i = pow2R; i < mtx->nrows; ++i)
@@ -169,7 +169,7 @@
         {
             srand(time(NULL));
 
-            for (int i = 0; i < r_app->alloc_size; ++i)
+            for (int i = 0; i < r_app->allocSize; ++i)
                 r_app->elem[i] = rand() % 256;
 
             for (int i = 0; i < r_app->nrows; ++i)
@@ -232,7 +232,7 @@
             vec->elem[i] = src_dual->elem[loc * src_dual->rwdcnt + i];
 
         // Padding the vector
-        memcpy(result->elem, src->elem, src->alloc_size);
+        memcpy(result->elem, src->elem, src->allocSize);
 
         for (int i = 0; i < vec->rwdcnt; ++i)
             result->elem[src->nrows * src->rwdcnt + i] = vec->elem[i];

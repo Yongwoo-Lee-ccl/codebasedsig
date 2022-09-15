@@ -11,9 +11,9 @@ matrix* newMatrix(uint32_t nrows, uint32_t ncols)
     mtx->ncols = ncols;
 
     mtx->rwdcnt = (1 + (ncols - 1) / ELEMBLOCKSIZE);
-    mtx->alloc_size = (mtx->nrows) * (mtx->rwdcnt) * sizeof(unsigned char);
+    mtx->allocSize = (mtx->nrows) * (mtx->rwdcnt) * sizeof(uint64_t); // in Bytes
 
-    mtx->elem = (unsigned char*)malloc(mtx->alloc_size);
+    mtx->elem = (uint64_t*)malloc(mtx->allocSize);
     
     initZero(mtx);
 
@@ -33,7 +33,7 @@ void matrixcpy(matrix* src, matrix* result)
     assert(result -> nrows == src -> nrows);
     assert(result -> ncols == src -> ncols);
 
-    memcpy(result -> elem, src -> elem, src -> alloc_size);
+    memcpy(result -> elem, src -> elem, src -> allocSize);
 }
 
 uint8_t isEqualVec(matrix* v1, matrix* v2){
@@ -84,40 +84,47 @@ void product(matrix* mtx1, matrix* mtx2, matrix* result)
 
 // Product between matrix and vector
 // Vector is row vector and the result is also row vector
-void mtxVecProd(matrix* mtx, matrix* vec, matrix* result)
+void  mtxVecProd(matrix* mtx, matrix* vec, matrix* result)
 {
     assert(mtx->ncols == vec->ncols);
     assert(mtx->nrows == result->ncols);
+    assert(mtx->ncols % ELEMBLOCKSIZE == 0);
+   
+    uint64_t bit, shift;
 
-    unsigned char bit, offset;
-    
+    initZero(result);
+
     for (int row = 0; row < mtx->nrows; ++row)
     {
         bit = 0;
-        for (int col = 0; col < mtx->rwdcnt - 1; ++col)
+        for (int col = 0; col < mtx->rwdcnt; ++col)
         {
-            bit ^= mtx->elem[row * mtx->rwdcnt + col] & vec->elem[col];
+            bit ^= mtx->elem[row * (mtx->rwdcnt) + col] 
+                    & vec->elem[col];
         }
 
-        offset = 0xff << (ELEMBLOCKSIZE * mtx->rwdcnt - mtx->ncols);
-
-        bit ^= (mtx->elem[row * mtx->rwdcnt + (mtx->rwdcnt - 1)] & vec->elem[mtx->rwdcnt - 1]) & offset;
-
+        bit ^= (bit >> 32);
+        bit ^= (bit >> 16);
+        bit ^= (bit >> 8);
         bit ^= (bit >> 4);
         bit ^= (bit >> 2);
         bit ^= (bit >> 1);
-        bit &= (unsigned char)1;
+        bit &= 1ull;
+        bit <<= ELEMBLOCKSIZE - 1;
 
-        setElement(result, 0, row, bit);
+        shift = row % ELEMBLOCKSIZE;
+
+        result->elem[row/ELEMBLOCKSIZE] ^= bit >> shift;
     }
 }
 
 // Interchanging row_idx1 and row_idx2 in matrix
 void rowInterchanging(matrix* mtx, uint32_t row_idx1, uint32_t row_idx2)
 {
+    uint64_t tmp;
     for (int col_idx = 0; col_idx < mtx->rwdcnt; ++col_idx)
     {
-        unsigned char tmp                           = mtx->elem[row_idx1 * mtx->rwdcnt + col_idx];
+        tmp = mtx->elem[row_idx1 * mtx->rwdcnt + col_idx];
         mtx->elem[row_idx1 * mtx->rwdcnt + col_idx] = mtx->elem[row_idx2 * mtx->rwdcnt + col_idx];
         mtx->elem[row_idx2 * mtx->rwdcnt + col_idx] = tmp;
     }
@@ -178,7 +185,7 @@ void inverse(matrix *mtx, matrix *mtxInv)
     
     int r, c;
 
-    for (r = 0; r < mtxInv->alloc_size; ++r)
+    for (r = 0; r < mtxInv->allocSize; ++r)
     {
         mtxInv->elem[r] = 0;
     }

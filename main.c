@@ -168,7 +168,7 @@ void testVerification(){
    matrix *s0 = newMatrix(1, CODE_N - CODE_K); // zero syndrome for test only
 
    long long c1, c2;
-   for (size_t i = 0; i < 1000; i++)
+   for (size_t i = 0; i < 10000; i++)
    {   
       c1 = cpucycles();
       // Hamming weight of e
@@ -177,7 +177,7 @@ void testVerification(){
          return;
       }
       // hash
-      hashMsg(aux->elem, m, mlen, sign_i);
+      hashMsg((unsigned char*)aux->elem, m, mlen, sign_i);
       // multiplication
       mtxVecProd(H, e, s);
       // compare
@@ -188,6 +188,21 @@ void testVerification(){
       c2 = cpucycles();
       printf("%Ld\n",c2-c1);
    }
+}
+
+void testMatrix(){
+   matrix* m = newMatrix(64,64);
+   matrix* v = newMatrix(1, 64);
+
+   uint64_t e = getElement(v, 0, 10);
+   setElement(v, 0, 10, 1);
+   setElement(v, 0, 20, 1);
+   setElement(v, 0, 30, 1);
+   setElement(v, 0, 5, 1);
+   setElement(v, 0, 7, 1);
+   setElement(v, 0, 10, 1);
+   printf("%lu\n", hammingWgt(v));
+   printf("%lu\n", e);
 }
 
 int main()

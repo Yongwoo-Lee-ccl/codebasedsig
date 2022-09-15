@@ -14,7 +14,7 @@
     unsigned char* hashMsg(unsigned char* s, const unsigned char* m, uint64_t mlen, uint64_t sign_i);
 
 // Find the hamming weight for error matrix (error vector)
-    int hammingWgt(matrix* error);
+    uint64_t hammingWgt(matrix* error);
 
 // Swap the Q[i] and Q[j]
     void swap16(uint16_t* Q, const int i, const int j);

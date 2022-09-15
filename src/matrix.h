@@ -11,24 +11,20 @@
 
 
 #define MATRIX_NULL 0 
-#define ELEMBLOCKSIZE 8
+#define ELEMBLOCKSIZE 64
 
-#define initZero(R)                 memset((R)->elem, 0, (R)->alloc_size)
-#define getElement(A, i, j)         (!!( (A)->elem[(i) * (A)->rwdcnt + (j) / ELEMBLOCKSIZE]  & (0x80 >> ((j) % ELEMBLOCKSIZE)) ))
-#define flipElement(A, i ,j)        (  ( (A)->elem[(i) * (A)->rwdcnt + (j) / ELEMBLOCKSIZE] ^= (0x80 >> ((j) % ELEMBLOCKSIZE)) ))
+#define initZero(R)                 memset((R)->elem, 0, (R)->allocSize)
+#define getElement(A, i, j)         (!!( (A)->elem[(i) * (A)->rwdcnt + (j) / ELEMBLOCKSIZE]  & (0x8000000000000000ULL >> ((j) % ELEMBLOCKSIZE)) ))
+#define flipElement(A, i ,j)        (  ( (A)->elem[(i) * (A)->rwdcnt + (j) / ELEMBLOCKSIZE] ^= (0x8000000000000000ULL >> ((j) % ELEMBLOCKSIZE)) ))
 #define setElement(A, i, j, val)    (  ( getElement((A), (i), (j)) == (val) ) ? 0 : flipElement( (A), (i), (j) ) )
 
 typedef struct
 {
-    int nrows;               // number of nrows
-
-    int ncols;               // number of columns
-
-    int rwdcnt;             // number of words in a row
-
-    int alloc_size;         // number of allocated bytes
-
-    unsigned char *elem;    // row index
+    uint32_t nrows;               // number of nrows
+    uint32_t ncols;               // number of columns
+    uint32_t rwdcnt;             // number of words in a row
+    uint32_t allocSize;         // number of allocated bytes
+    uint64_t *elem;    // row index
 } matrix;
 
 // Allocate the matrix;
@@ -72,8 +68,5 @@ void getPivot(matrix* mtx, uint16_t* lead, uint16_t* lead_diff);
 
 // Construct the dual matrix for G (H_sys * G = I)
 void dual(matrix* G, matrix *H_sys);
-
-
-
 
 #endif
