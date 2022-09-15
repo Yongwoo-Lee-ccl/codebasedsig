@@ -231,7 +231,6 @@ bool isNonsingular(matrix *mtx)
     matrixcpy(mtx, tmp);
 
     int r, c;
-    unsigned char bit_one = 0x80;
 
     for (c = 0; c < tmp->ncols; ++c)
     {
