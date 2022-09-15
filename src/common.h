@@ -11,7 +11,7 @@
 #include "parm.h"
 
 // Hash for the message
-    unsigned char* hashMsg(unsigned char* s, const unsigned char* m, uint64_t mlen, uint64_t sign_i);
+    unsigned char* hashMsg(unsigned char* s, const unsigned char* mHi, uint64_t mlen);
 
 // Find the hamming weight for error matrix (error vector)
     uint64_t hammingWgt(matrix* error);

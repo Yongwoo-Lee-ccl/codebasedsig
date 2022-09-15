@@ -11,13 +11,12 @@ void SHAKE128(unsigned char *digest, const unsigned char *message, size_t messag
     EVP_MD_CTX_destroy(mdctx);
 }
 
-unsigned char* hashMsg(unsigned char* s, const unsigned char* m, uint64_t mlen, uint64_t sign_i)
+unsigned char* hashMsg(unsigned char* s, const unsigned char* mHi, uint64_t mlen)
 {
     // Hash the given message, syndrome s = h(M|i)
     // It uses SHAKE128 inside
 
-    *(uint64_t*)(m + mlen) = sign_i; //concatenate i: h(M | i )
-    SHAKE128(s, m, mlen+sizeof(uint64_t), (CODE_N - CODE_K)/8);
+    SHAKE128(s, mHi, mlen+sizeof(uint64_t), (CODE_N - CODE_K)/8);
 
     return s;
 }

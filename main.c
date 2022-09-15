@@ -159,9 +159,18 @@ void testVerification(){
    matrix *s = newMatrix(1, CODE_N - CODE_K);
 
    size_t mlen = 100;
-   uint64_t sign_i = 0;
-   unsigned char m[mlen + sizeof(uint64_t)];
+   const size_t lambda = 128;
+   const size_t ilen = 2*lambda/8;
+   const size_t Hlen = CODE_K * CODE_N / 8;
+   unsigned char sign_i[ilen];
+   unsigned char m[mlen];
+   unsigned char mHi[mlen + Hlen + ilen];
 
+   // prepare as a consecutive byte string for signing.
+   // we can assume it is given as it is, so memcpy is not included in verification time
+   memcpy(mHi, m, mlen);
+   memcpy(mHi + mlen, H->elem, Hlen);
+   memcpy(mHi + mlen + Hlen, sign_i, ilen);
 
    // allocation of syndrome
    matrix *aux = newMatrix(1, CODE_N - CODE_K); // NOTE: we don't use this value in this test (as we do not find valid signature)
@@ -177,7 +186,7 @@ void testVerification(){
          return;
       }
       // hash
-      hashMsg((unsigned char*)aux->elem, m, mlen, sign_i);
+      hashMsg((unsigned char*)aux->elem, mHi, mlen);
       // multiplication
       mtxVecProd(H, e, s);
       // compare
